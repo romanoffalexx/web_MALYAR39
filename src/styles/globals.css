@@ -1,0 +1,219 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans text-ink bg-cream-50 antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading font-bold;
+  }
+  :focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-accent;
+  }
+}
+
+@layer components {
+  /* Кнопки из макетов: кремовая плашка, контур на тёмном, контур на светлом */
+  .btn-cream {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-cream-100 px-6 py-3 text-sm font-semibold text-forest-900 transition-colors duration-200 hover:bg-white;
+  }
+  .btn-outline-light {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-cream-100/70 px-5 py-2.5 text-sm font-medium text-cream-100 transition-colors duration-200 hover:bg-cream-100 hover:text-forest-900;
+  }
+  .btn-outline-dark {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-forest-800/60 px-5 py-2.5 text-sm font-medium text-forest-900 transition-colors duration-200 hover:bg-forest-900 hover:text-cream-100;
+  }
+  .btn-solid {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-forest-800 px-6 py-3 text-sm font-semibold text-cream-100 transition-colors duration-200 hover:bg-forest-900;
+  }
+
+  .input-field {
+    @apply w-full rounded-md border border-cream-400/70 bg-white px-4 py-2.5 text-sm text-ink outline-none transition-all placeholder:text-moss/70 focus:border-forest-600 focus:ring-2 focus:ring-forest-600/20;
+  }
+
+  .card {
+    @apply overflow-hidden rounded-lg border border-ink/5 bg-white shadow-card;
+  }
+
+  /* Заголовок секции с тонкими линейками по бокам, как в макете */
+  .section-head {
+    @apply mb-10 flex items-center justify-center gap-6;
+  }
+  .section-head::before,
+  .section-head::after {
+    content: "";
+    @apply h-px w-16 bg-ink/20;
+  }
+  .section-head-title {
+    @apply text-sm font-semibold uppercase tracking-[0.22em] text-ink;
+  }
+
+  /* Заголовок секции, прижатый влево, со ссылкой справа */
+  .section-row {
+    @apply mb-8 flex items-end justify-between gap-4;
+  }
+  .section-row-title {
+    @apply text-lg font-semibold uppercase tracking-[0.14em] text-ink;
+  }
+  .section-row-link {
+    @apply inline-flex items-center gap-1.5 whitespace-nowrap text-xs font-medium text-moss transition-colors hover:text-forest-800;
+  }
+
+  .eyebrow {
+    @apply text-[11px] font-semibold uppercase tracking-[0.24em] text-accent;
+  }
+
+  /* Совместимость со страницами, написанными до редизайна */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md bg-forest-800 px-6 py-3 text-sm font-semibold text-cream-100 transition-colors duration-200 hover:bg-forest-900;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-forest-800/60 bg-transparent px-6 py-3 text-sm font-semibold text-forest-900 transition-colors duration-200 hover:bg-forest-900 hover:text-cream-100;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-md border border-forest-800/60 px-5 py-2.5 text-sm font-medium text-forest-900 transition-colors duration-200 hover:bg-forest-900 hover:text-cream-100;
+  }
+  .section-title {
+    @apply mb-8 font-heading text-3xl font-bold text-forest-900 md:text-4xl;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1ede3;
+}
+::-webkit-scrollbar-thumb {
+  background: #16402e;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0e3023;
+}
+.chat-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.chat-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.chat-scroll::-webkit-scrollbar-thumb {
+  background: rgba(18, 41, 30, 0.18);
+  border-radius: 999px;
+}
+
+/* Chat widget animation */
+@keyframes chatFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.chat-enter {
+  animation: chatFadeIn 0.3s ease-out;
+}
+
+/* Typing indicator */
+@keyframes typingBounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-4px);
+  }
+}
+.typing-dot {
+  animation: typingBounce 1.4s infinite;
+}
+.typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Before/After slider */
+.before-after-container {
+  position: relative;
+  overflow: hidden;
+  cursor: ew-resize;
+  user-select: none;
+}
+
+/* Double-thumb price range */
+.range-double {
+  position: relative;
+  height: 18px;
+}
+.range-double .range-track,
+.range-double .range-fill {
+  position: absolute;
+  top: 50%;
+  height: 2px;
+  transform: translateY(-50%);
+}
+.range-double .range-track {
+  left: 0;
+  right: 0;
+  background: rgba(18, 41, 30, 0.15);
+}
+.range-double .range-fill {
+  background: #16402e;
+}
+.range-double input[type="range"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  background: none;
+  pointer-events: none;
+}
+.range-double input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  pointer-events: auto;
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 1px solid rgba(18, 41, 30, 0.3);
+  box-shadow: 0 1px 2px rgba(18, 41, 30, 0.18);
+  cursor: pointer;
+}
+.range-double input[type="range"]::-moz-range-thumb {
+  pointer-events: auto;
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 1px solid rgba(18, 41, 30, 0.3);
+  cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

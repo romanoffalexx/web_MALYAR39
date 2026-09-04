@@ -1,0 +1,212 @@
+export interface SeedReview {
+  slug: string;
+  title: string;
+  type: "video" | "photo";
+  thumbnail: string;
+  description: string;
+  views: number;
+  dateIso: string;
+  duration?: string;
+  category?: string;
+  featured?: boolean;
+  embedUrl?: string;
+}
+
+export const seedReviews: SeedReview[] = [
+  {
+    slug: "kak-vybrat-fasadnuyu-krasku",
+    title: "Как выбрать фасадную краску?",
+    type: "video",
+    thumbnail: "/images/categories/water-paints.jpg",
+    description:
+      "Разбираем типы фасадных красок, паропроницаемость и стойкость к УФ-излучению.",
+    views: 2140,
+    dateIso: "2024-05-22",
+    duration: "04:38",
+    category: "fasad",
+    featured: true,
+  },
+  {
+    slug: "test-kraski-na-vlagostoykost",
+    title: "Тестируем краску на влагостойкость",
+    type: "video",
+    thumbnail: "/images/hero/paint-can.jpg",
+    description:
+      "Лабораторный тест интерьерных красок: мытьё, истирание и поведение во влажной среде.",
+    views: 1870,
+    dateIso: "2024-05-18",
+    duration: "06:12",
+    category: "interer",
+    featured: true,
+  },
+  {
+    slug: "dekorativnaya-shtukaturka-svoimi-rukami",
+    title: "Декоративная штукатурка своими руками",
+    type: "video",
+    thumbnail: "/images/categories/plaster.jpg",
+    description:
+      "Пошаговое нанесение декоративной штукатурки: инструмент, техника и типичные ошибки.",
+    views: 1620,
+    dateIso: "2024-05-12",
+    duration: "05:45",
+    category: "shtukaturka",
+    featured: true,
+  },
+  {
+    slug: "kraska-po-metallu-zashchita-ot-korrozii",
+    title: "Краска по металлу: защита от коррозии",
+    type: "video",
+    thumbnail: "/images/categories/metal-paints.jpg",
+    description:
+      "Подготовка поверхности, выбор грунт-эмали и схема нанесения для длительной защиты.",
+    views: 1340,
+    dateIso: "2024-05-08",
+    duration: "03:57",
+    category: "metall",
+    featured: true,
+  },
+  {
+    slug: "malyarnyy-instrument-kakoy-vybrat",
+    title: "Малярный инструмент: какой выбрать?",
+    type: "video",
+    thumbnail: "/images/categories/tools.jpg",
+    description:
+      "Валики, кисти и абразивы: что подходит под разные типы красок и поверхностей.",
+    views: 1180,
+    dateIso: "2024-05-04",
+    duration: "04:21",
+    category: "instrument",
+    featured: true,
+  },
+  {
+    slug: "mipa-innenlatex-idealnaya-kraska-dlya-sten",
+    title: "MIPA Innenlatex — идеальная краска для стен в квартире",
+    type: "video",
+    thumbnail: "/images/reviews/sofa-mipa.jpg",
+    description:
+      "Разбираем характеристики, укрывистость, моющуюся стойкость и реальный расход.",
+    views: 1240,
+    dateIso: "2024-05-20",
+    duration: "06:45",
+    category: "interer",
+  },
+  {
+    slug: "vika-facade-stoykost-fasada-na-gody",
+    title: "VIKA Facade — стойкость фасада на годы",
+    type: "video",
+    thumbnail: "/images/reviews/house-vika.jpg",
+    description:
+      "Проверяем фасадную краску VIKA в реальных условиях. Тест на атмосферостойкость.",
+    views: 980,
+    dateIso: "2024-05-15",
+    duration: "08:12",
+    category: "fasad",
+  },
+  {
+    slug: "feidal-innenlatex-matt-matovaya-krasota",
+    title: "FEIDAL Innenlatex Matt — матовая красота без бликов",
+    type: "video",
+    thumbnail: "/images/reviews/sofa-feidal.jpg",
+    description: "Обзор интерьерной краски: матовый эффект, легкость нанесения, результаты.",
+    views: 860,
+    dateIso: "2024-05-10",
+    duration: "07:30",
+    category: "interer",
+  },
+  {
+    slug: "dekorativnaya-shtukaturka-mipa-silikonharzputz",
+    title: "Декоративная штукатурка MIPA Silikonharzputz",
+    type: "video",
+    thumbnail: "/images/reviews/stairs-plaster.jpg",
+    description: "Создаём фактурное покрытие своими руками. Пошаговая инструкция и советы.",
+    views: 1150,
+    dateIso: "2024-05-05",
+    duration: "09:18",
+    category: "shtukaturka",
+  },
+  {
+    slug: "kolerovka-krasok-kak-poluchit-nuzhnyy-ottenok",
+    title: "Колеровка красок: как получить нужный оттенок",
+    type: "video",
+    thumbnail: "/images/reviews/colormix.jpg",
+    description: "Рассказываем о колеровочных базах, системах и подборе цвета.",
+    views: 720,
+    dateIso: "2024-05-02",
+    duration: "06:22",
+    category: "kolerovka",
+  },
+  {
+    slug: "brulex-extra-matt-glubokomatovaya-dlya-potolkov",
+    title: "BRÜLEX Extra Matt — глубокоматовая для идеальных потолков",
+    type: "video",
+    thumbnail: "/images/reviews/roller-wall.jpg",
+    description: "Тестируем краску на потолке: отсутствие бликов и высокая укрывистость.",
+    views: 640,
+    dateIso: "2024-04-28",
+    duration: "06:05",
+    category: "interer",
+  },
+  {
+    slug: "nordica-eko-zashchita-drevesiny-snaruzhi",
+    title: "NORDICA EKO — защита древесины снаружи",
+    type: "video",
+    thumbnail: "/images/reviews/wood-house.jpg",
+    description: "Масло для фасадов и террас. Нанесение, защита и уход.",
+    views: 910,
+    dateIso: "2024-04-25",
+    duration: "07:40",
+    category: "fasad",
+  },
+  {
+    slug: "kraska-dlya-vannoy-kakuyu-vybrat",
+    title: "Краска для ванной: какую выбрать?",
+    type: "video",
+    thumbnail: "/images/reviews/bathroom.jpg",
+    description:
+      "Сравниваем интерьерные краски для влажных помещений. Наш выбор и рекомендации.",
+    views: 690,
+    dateIso: "2024-04-20",
+    duration: "04:55",
+    category: "vlazhnye-pomeshcheniya",
+  },
+  {
+    slug: "foto-obzor-fasady-zhk-novaya-riga",
+    title: "Фотообзор: фасады ЖК «Новая Рига» через год после сдачи",
+    type: "photo",
+    thumbnail: "/images/cases/zhk.jpg",
+    description: "Как держат цвет и фактуру фасадные краски после сезона погоды.",
+    views: 540,
+    dateIso: "2024-04-14",
+    category: "fasad",
+  },
+  {
+    slug: "foto-obzor-mop-bts-arena-park",
+    title: "Фотообзор: МОП БЦ «Арена Парк»",
+    type: "photo",
+    thumbnail: "/images/cases/office.jpg",
+    description: "Глубокоматовые стены в зонах аренды: свет, стыки, укрывистость.",
+    views: 410,
+    dateIso: "2024-04-08",
+    category: "interer",
+  },
+  {
+    slug: "foto-obzor-atrium-tts-siti-moll",
+    title: "Фотообзор: атриум ТЦ «Сити Молл»",
+    type: "photo",
+    thumbnail: "/images/cases/mall.jpg",
+    description: "Матовое покрытие без бликов при искусственном освещении.",
+    views: 380,
+    dateIso: "2024-03-30",
+    category: "interer",
+  },
+  {
+    slug: "foto-obzor-klassy-shkoly-45",
+    title: "Фотообзор: классы школы №45",
+    type: "photo",
+    thumbnail: "/images/cases/school.jpg",
+    description: "Сертифицированная краска в детском учреждении: цвет и стойкость.",
+    views: 295,
+    dateIso: "2024-03-22",
+    category: "detskie-uchrezhdeniya",
+  },
+];
