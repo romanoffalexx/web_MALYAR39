@@ -1,17 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { type SiteSettings } from "@/lib/site-settings";
 import { useCart } from "@/components/cart/CartProvider";
 
+interface NavCategory {
+  slug: string;
+  name: string;
+}
+
 const navItems = [
-  { href: "/catalog", label: "Каталог", chevron: true },
-  { href: "/catalog", label: "Бренды" },
+  { href: "/solutions", label: "Типовые решения" },
+  { href: "/cases", label: "Кейсы" },
+  { href: "/reviews", label: "Видеообзоры" },
   { href: "/about", label: "О компании" },
-  { href: "/about#delivery", label: "Доставка и оплата" },
-  { href: "/about#warranty", label: "Гарантии" },
-  { href: "/about#contacts", label: "Контакты" },
 ];
 
 function LogoMark({ className = "" }: { className?: string }) {
@@ -54,10 +58,39 @@ export function Logo({ light = true }: { light?: boolean }) {
   );
 }
 
-export default function Header({ settings }: { settings: SiteSettings }) {
+export default function Header({
+  settings,
+  categories,
+}: {
+  settings: SiteSettings;
+  categories: NavCategory[];
+}) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [catalogOpen, setCatalogOpen] = useState(false);
+  const [mobileCatalogOpen, setMobileCatalogOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const { count: cartCount } = useCart();
-  const [favCount] = useState(0);
+  const router = useRouter();
+  const catalogRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (catalogRef.current && !catalogRef.current.contains(e.target as Node)) {
+        setCatalogOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    if (q) {
+      router.push(`/catalog?search=${encodeURIComponent(q)}`);
+      setSearchQuery("");
+    }
+  };
 
   return (
     <header className="sticky top-0 z-50 text-cream-100 shadow-lg">
@@ -76,7 +109,7 @@ export default function Header({ settings }: { settings: SiteSettings }) {
             </svg>
           </Link>
 
-          <label className="relative hidden min-w-0 flex-1 md:block md:max-w-md">
+          <form onSubmit={handleSearch} className="relative hidden min-w-0 flex-1 md:block md:max-w-md">
             <span className="sr-only">Поиск по каталогу</span>
             <svg
               className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-cream-100/50"
@@ -93,10 +126,12 @@ export default function Header({ settings }: { settings: SiteSettings }) {
             </svg>
             <input
               type="search"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Поиск по каталогу"
               className="w-full rounded-md bg-forest-900/70 py-2.5 pl-10 pr-4 text-sm text-cream-100 outline-none transition-colors placeholder:text-cream-100/45 focus:bg-forest-900"
             />
-          </label>
+          </form>
 
           <div className="ml-auto hidden text-right lg:block">
             <a
@@ -111,28 +146,6 @@ export default function Header({ settings }: { settings: SiteSettings }) {
           </div>
 
           <div className="ml-auto flex items-center gap-5 lg:ml-6">
-            <Link href="/catalog" className="group relative flex flex-col items-center gap-1">
-              <span className="relative">
-                <svg
-                  width="21"
-                  height="21"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.7"
-                  aria-hidden
-                >
-                  <path d="M12 20.5s-7.5-4.7-7.5-10A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 7.5 3.5c0 5.3-7.5 10-7.5 10Z" />
-                </svg>
-                {favCount > 0 && (
-                  <span className="absolute -right-2 -top-2 flex h-4 w-4 items-center justify-center rounded-full bg-cream-100 text-[10px] font-bold text-forest-900">
-                    {favCount}
-                  </span>
-                )}
-              </span>
-              <span className="text-[10px] leading-none text-cream-100/75">Избранное</span>
-            </Link>
-
             <Link href="/cart" className="group relative flex flex-col items-center gap-1">
               <span className="relative">
                 <svg
@@ -175,9 +188,56 @@ export default function Header({ settings }: { settings: SiteSettings }) {
         </div>
       </div>
 
-      {/* Ряд 2: навигация */}
+      {/* Ряд 2: навигация с dropdown каталога */}
       <nav className="hidden bg-forest-900 lg:block">
         <div className="mx-auto flex max-w-7xl items-center gap-8 px-4">
+          {/* Каталог с dropdown */}
+          <div ref={catalogRef} className="relative">
+            <button
+              type="button"
+              onClick={() => setCatalogOpen(!catalogOpen)}
+              className="flex items-center gap-1.5 py-3 text-[13px] font-medium text-cream-100/85 transition-colors hover:text-white"
+            >
+              Каталог
+              <svg
+                width="10"
+                height="10"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.4"
+                className={`transition-transform ${catalogOpen ? "rotate-180" : ""}`}
+                aria-hidden
+              >
+                <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+
+            {catalogOpen && (
+              <div className="absolute left-0 top-full z-50 min-w-[240px] rounded-b-lg bg-white py-2 shadow-xl">
+                {categories.map((cat) => (
+                  <Link
+                    key={cat.slug}
+                    href={`/catalog/${cat.slug}`}
+                    onClick={() => setCatalogOpen(false)}
+                    className="block px-5 py-2.5 text-sm text-ink transition-colors hover:bg-cream-100 hover:text-forest-800"
+                  >
+                    {cat.name}
+                  </Link>
+                ))}
+                <div className="mt-1 border-t border-ink/8 pt-1">
+                  <Link
+                    href="/catalog"
+                    onClick={() => setCatalogOpen(false)}
+                    className="block px-5 py-2.5 text-sm font-semibold text-forest-800 transition-colors hover:bg-cream-100"
+                  >
+                    Все товары
+                  </Link>
+                </div>
+              </div>
+            )}
+          </div>
+
           {navItems.map((item) => (
             <Link
               key={item.label}
@@ -185,11 +245,6 @@ export default function Header({ settings }: { settings: SiteSettings }) {
               className="flex items-center gap-1.5 py-3 text-[13px] font-medium text-cream-100/85 transition-colors hover:text-white"
             >
               {item.label}
-              {item.chevron && (
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden>
-                  <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              )}
             </Link>
           ))}
         </div>
@@ -199,6 +254,48 @@ export default function Header({ settings }: { settings: SiteSettings }) {
       {mobileOpen && (
         <div className="border-t border-white/10 bg-forest-900 lg:hidden">
           <nav className="mx-auto flex max-w-7xl flex-col px-4 py-3">
+            {/* Каталог аккордеон */}
+            <button
+              type="button"
+              onClick={() => setMobileCatalogOpen(!mobileCatalogOpen)}
+              className="flex items-center justify-between rounded-md px-3 py-2.5 text-sm transition-colors hover:bg-white/10"
+            >
+              Каталог
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.4"
+                className={`transition-transform ${mobileCatalogOpen ? "rotate-180" : ""}`}
+                aria-hidden
+              >
+                <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            {mobileCatalogOpen && (
+              <div className="ml-4 flex flex-col border-l border-white/10">
+                {categories.map((cat) => (
+                  <Link
+                    key={cat.slug}
+                    href={`/catalog/${cat.slug}`}
+                    onClick={() => setMobileOpen(false)}
+                    className="rounded-md px-3 py-2 text-sm text-cream-100/75 transition-colors hover:bg-white/10 hover:text-white"
+                  >
+                    {cat.name}
+                  </Link>
+                ))}
+                <Link
+                  href="/catalog"
+                  onClick={() => setMobileOpen(false)}
+                  className="rounded-md px-3 py-2 text-sm font-semibold transition-colors hover:bg-white/10"
+                >
+                  Все товары
+                </Link>
+              </div>
+            )}
+
             {navItems.map((item) => (
               <Link
                 key={item.label}

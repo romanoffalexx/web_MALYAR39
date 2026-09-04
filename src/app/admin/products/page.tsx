@@ -115,6 +115,12 @@ export default function AdminProductsPage() {
   const [variants, setVariants] = useState<Variant[]>([]);
   const [images, setImages] = useState<ImageItem[]>([]);
   const [characteristics, setCharacteristics] = useState<Characteristic[]>([]);
+  const [seoTitle, setSeoTitle] = useState("");
+  const [seoDescription, setSeoDescription] = useState("");
+  const [applicationInstructions, setApplicationInstructions] = useState("");
+  const [compatibility, setCompatibility] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
+  const [documentsJson, setDocumentsJson] = useState("");
 
   const fetchProducts = useCallback(async (searchQuery?: string) => {
     setLoading(true);
@@ -176,6 +182,12 @@ export default function AdminProductsPage() {
     setVariants([]);
     setImages([]);
     setCharacteristics([]);
+    setSeoTitle("");
+    setSeoDescription("");
+    setApplicationInstructions("");
+    setCompatibility("");
+    setVideoUrl("");
+    setDocumentsJson("");
     setEditingId(null);
     setError("");
   };
@@ -230,6 +242,12 @@ export default function AdminProductsPage() {
           value: c.value,
         }))
       );
+      setSeoTitle(p.seoTitle || "");
+      setSeoDescription(p.seoDescription || "");
+      setApplicationInstructions(p.applicationInstructions || "");
+      setCompatibility(p.compatibility || "");
+      setVideoUrl(p.videoUrl || "");
+      setDocumentsJson(p.documents ? JSON.stringify(p.documents, null, 2) : "");
       setEditingId(p.id);
       setShowForm(true);
     } catch (err) {
@@ -253,6 +271,17 @@ export default function AdminProductsPage() {
     e.preventDefault();
     setSaving(true);
     setError("");
+
+    let parsedDocuments = null;
+    if (documentsJson) {
+      try {
+        parsedDocuments = JSON.parse(documentsJson);
+      } catch {
+        setError("Некорректный JSON в поле «Документы»");
+        setSaving(false);
+        return;
+      }
+    }
 
     const payload = {
       name,
@@ -290,6 +319,12 @@ export default function AdminProductsPage() {
           key: c.key,
           value: c.value,
         })),
+      seoTitle: seoTitle || null,
+      seoDescription: seoDescription || null,
+      applicationInstructions: applicationInstructions || null,
+      compatibility: compatibility || null,
+      videoUrl: videoUrl || null,
+      documents: parsedDocuments,
     };
 
     try {
@@ -857,6 +892,90 @@ export default function AdminProductsPage() {
                       </button>
                     </div>
                   ))}
+                </div>
+              </div>
+
+              {/* SEO и дополнительные поля */}
+              <div className="border-t border-gray-200 pt-4">
+                <h3 className="font-semibold mb-3">SEO и дополнительно</h3>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        SEO Title
+                      </label>
+                      <input
+                        type="text"
+                        value={seoTitle}
+                        onChange={(e) => setSeoTitle(e.target.value)}
+                        className="input-field"
+                        placeholder="Заголовок для поисковиков"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Видео (URL)
+                      </label>
+                      <input
+                        type="text"
+                        value={videoUrl}
+                        onChange={(e) => setVideoUrl(e.target.value)}
+                        className="input-field"
+                        placeholder="https://youtube.com/embed/..."
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      SEO Description
+                    </label>
+                    <textarea
+                      value={seoDescription}
+                      onChange={(e) => setSeoDescription(e.target.value)}
+                      className="input-field"
+                      rows={2}
+                      placeholder="Описание для поисковиков"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Инструкция по нанесению
+                    </label>
+                    <textarea
+                      value={applicationInstructions}
+                      onChange={(e) => setApplicationInstructions(e.target.value)}
+                      className="input-field"
+                      rows={3}
+                      placeholder="Как правильно наносить материал..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Совместимость
+                    </label>
+                    <textarea
+                      value={compatibility}
+                      onChange={(e) => setCompatibility(e.target.value)}
+                      className="input-field"
+                      rows={2}
+                      placeholder="С какими поверхностями и материалами совместим..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Документы (JSON)
+                    </label>
+                    <textarea
+                      value={documentsJson}
+                      onChange={(e) => setDocumentsJson(e.target.value)}
+                      className="input-field font-mono text-xs"
+                      rows={3}
+                      placeholder='[{"name":"Сертификат","url":"https://...","size":"1.2 MB"}]'
+                    />
+                    <p className="mt-1 text-xs text-gray-400">
+                      Формат: массив объектов с полями name, url, size (необязательно)
+                    </p>
+                  </div>
                 </div>
               </div>
 

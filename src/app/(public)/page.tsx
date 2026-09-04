@@ -105,6 +105,20 @@ export default async function HomePage() {
                 </li>
               ))}
             </ul>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link
+                href="/catalog"
+                className="rounded-md bg-forest-800 px-7 py-3.5 text-sm font-semibold text-cream-100 transition-colors hover:bg-forest-900"
+              >
+                Перейти в каталог
+              </Link>
+              <Link
+                href="/consultation"
+                className="rounded-md border border-forest-800 px-7 py-3.5 text-sm font-semibold text-forest-800 transition-colors hover:bg-forest-800 hover:text-cream-100"
+              >
+                Подобрать материал
+              </Link>
+            </div>
           </div>
 
           <div className="relative -mx-4 lg:mx-0 lg:self-stretch">

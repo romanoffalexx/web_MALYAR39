@@ -397,13 +397,15 @@ export default function CartPage() {
 
                   {error && <p className="mt-3 text-xs text-[#d9553f]">{error}</p>}
 
-                  <p className="mt-4 flex items-start gap-2.5 text-[11px] leading-relaxed text-moss">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" className="mt-0.5 shrink-0" aria-hidden>
-                      <rect x="5" y="10" width="14" height="10" rx="2" />
-                      <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-                    </svg>
-                    Нажимая кнопку, вы соглашаетесь на обработку персональных данных
-                  </p>
+                  <label className="mt-4 flex items-start gap-2.5 text-[11px] leading-relaxed text-moss">
+                    <input type="checkbox" defaultChecked className="mt-0.5 shrink-0 accent-forest-800" />
+                    <span>
+                      Я согласен на{" "}
+                      <Link href="/privacy" target="_blank" className="underline hover:text-ink">
+                        обработку персональных данных
+                      </Link>
+                    </span>
+                  </label>
                 </form>
               </div>
             </aside>

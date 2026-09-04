@@ -26,10 +26,8 @@ export default function ProductViewClient({ product }: Props) {
     if (hasApplication || hasCoverage) t.push({ key: "Расход и нанесение", label: "Расход и нанесение" });
     if (hasCompatibility) t.push({ key: "Совместимость", label: "Совместимость" });
     if (hasVideo) t.push({ key: "Видео", label: "Видео" });
-    t.push({ key: "Отзывы", label: `Отзывы (${product.reviewsCount})` });
-    if (hasDocuments) t.push({ key: "Документы", label: "Документы" });
     return t;
-  }, [product.characteristics.length, hasDescription, hasApplication, hasCoverage, hasCompatibility, hasVideo, hasDocuments, product.reviewsCount]);
+  }, [product.characteristics.length, hasDescription, hasApplication, hasCoverage, hasCompatibility, hasVideo]);
 
   const [imageIndex, setImageIndex] = useState(0);
   const [variantIndex, setVariantIndex] = useState(0);
@@ -167,10 +165,7 @@ export default function ProductViewClient({ product }: Props) {
                   <span className="font-bold text-ink">{product.rating}</span>
                 </span>
               )}
-              {product.reviewsCount > 0 && (
-                <span className="text-moss">{product.reviewsCount} отзыва</span>
-              )}
-              {(product.rating > 0 || product.reviewsCount > 0) && product.article && (
+              {product.rating > 0 && product.article && (
                 <span className="h-4 w-px bg-ink/10" aria-hidden />
               )}
               {product.article && <span className="text-moss">Артикул: {product.article}</span>}
@@ -269,33 +264,12 @@ export default function ProductViewClient({ product }: Props) {
                   </>
                 )}
               </button>
-              <button
-                type="button"
+              <Link
+                href="/consultation"
                 className="flex items-center justify-center gap-2.5 rounded-md border border-ink/15 bg-white px-6 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-ink/30"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
-                  <path d="M12 20.5s-7.5-4.7-7.5-10A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 7.5 3.5c0 5.3-7.5 10-7.5 10Z" strokeLinejoin="round" />
-                </svg>
-                В избранное
-              </button>
-            </div>
-
-            <div className="mt-5 flex items-center gap-7 text-[13px] text-moss">
-              <button type="button" className="flex items-center gap-2 transition-colors hover:text-ink">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
-                  <path d="M6 20V10M12 20V4M18 20v-7" strokeLinecap="round" />
-                </svg>
-                Сравнить
-              </button>
-              <button type="button" className="flex items-center gap-2 transition-colors hover:text-ink">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
-                  <circle cx="6" cy="12" r="2.5" />
-                  <circle cx="17.5" cy="5.5" r="2.5" />
-                  <circle cx="17.5" cy="18.5" r="2.5" />
-                  <path d="m8.3 10.8 7-4M8.3 13.2l7 4" strokeLinecap="round" />
-                </svg>
-                Поделиться
-              </button>
+                Нужна консультация
+              </Link>
             </div>
           </div>
 
@@ -515,48 +489,6 @@ export default function ProductViewClient({ product }: Props) {
                       allowFullScreen
                     />
                   </div>
-                </div>
-              )}
-
-              {activeTab === "Отзывы" && (
-                <div className="card max-w-xl p-8 text-center">
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" className="mx-auto text-moss/30" aria-hidden>
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  <p className="mt-4 text-sm font-semibold text-ink">
-                    {product.reviewsCount > 0
-                      ? `У этого товара ${product.reviewsCount} отзывов`
-                      : "Отзывов пока нет"}
-                  </p>
-                  <p className="mt-1.5 text-xs text-moss">
-                    Поделитесь своим опытом использования товара
-                  </p>
-                  <button
-                    type="button"
-                    className="mt-5 rounded-md bg-forest-800 px-6 py-2.5 text-sm font-semibold text-cream-100 transition-colors hover:bg-forest-900"
-                  >
-                    Оставить отзыв
-                  </button>
-                </div>
-              )}
-
-              {activeTab === "Документы" && hasDocuments && (
-                <div className="card max-w-xl divide-y divide-ink/6">
-                  {product.documents.map((doc) => (
-                    <a
-                      key={doc.url}
-                      href={doc.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-cream-100"
-                    >
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className="shrink-0 text-forest-800" aria-hidden>
-                        <path d="M6 3h8l4 4v14H6zM14 3v4h4" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                      <span className="flex-1 text-[13px] font-semibold text-ink">{doc.name}</span>
-                      {doc.size && <span className="text-[11px] text-moss">{doc.size}</span>}
-                    </a>
-                  ))}
                 </div>
               )}
             </div>

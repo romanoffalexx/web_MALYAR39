@@ -2,40 +2,37 @@ import Link from "next/link";
 import { Logo } from "./Header";
 import { type SiteSettings } from "@/lib/site-settings";
 
-const columns = [
-  {
-    title: "Каталог",
-    links: [
-      { href: "/catalog", label: "Водные краски" },
-      { href: "/catalog", label: "Краски по металлу" },
-      { href: "/catalog", label: "Декоративные штукатурки" },
-      { href: "/catalog", label: "Малярный инструмент" },
-      { href: "/catalog", label: "Бренды" },
-      { href: "/catalog", label: "Все товары" },
-    ],
-  },
-  {
-    title: "Покупателям",
-    links: [
-      { href: "/about#delivery", label: "Доставка и оплата" },
-      { href: "/about#warranty", label: "Гарантии и возврат" },
-      { href: "/cart", label: "Как сделать заказ" },
-      { href: "/catalog", label: "Калькулятор расхода" },
-      { href: "/solutions", label: "Типовые решения" },
-      { href: "/cases", label: "Кейсы и обзоры" },
-    ],
-  },
-  {
-    title: "Компания",
-    links: [
-      { href: "/about", label: "О компании" },
-      { href: "/reviews", label: "Новости" },
-      { href: "/reviews", label: "Статьи" },
-      { href: "/about", label: "Вакансии" },
-      { href: "/about#contacts", label: "Контакты" },
-    ],
-  },
-];
+interface NavCategory {
+  slug: string;
+  name: string;
+}
+
+function buildColumns(categories: NavCategory[]) {
+  return [
+    {
+      title: "Каталог",
+      links: categories.map((c) => ({
+        href: `/catalog/${c.slug}`,
+        label: c.name,
+      })),
+    },
+    {
+      title: "Покупателям",
+      links: [
+        { href: "/solutions", label: "Типовые решения" },
+        { href: "/cases", label: "Кейсы" },
+        { href: "/reviews", label: "Видеообзоры" },
+        { href: "/cart", label: "Как сделать заказ" },
+      ],
+    },
+    {
+      title: "Компания",
+      links: [
+        { href: "/about", label: "О компании и контакты" },
+      ],
+    },
+  ];
+}
 
 function SocialIcon({
   label,
@@ -60,7 +57,14 @@ function SocialIcon({
   );
 }
 
-export default function Footer({ settings }: { settings: SiteSettings }) {
+export default function Footer({
+  settings,
+  categories,
+}: {
+  settings: SiteSettings;
+  categories: NavCategory[];
+}) {
+  const columns = buildColumns(categories);
   return (
     <footer className="bg-forest-900 text-cream-100">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_1fr_1.2fr]">
@@ -161,10 +165,14 @@ export default function Footer({ settings }: { settings: SiteSettings }) {
       <div className="border-t border-cream-100/10">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-4 text-[11px] text-cream-100/45 md:flex-row md:items-center md:justify-between">
           <span>{settings.copyright}</span>
-          <a href="#" className="transition-colors hover:text-cream-100">
-            Политика конфиденциальности
-          </a>
-          <span>Разработка сайта — WebPro</span>
+          <div className="flex flex-col gap-1 md:flex-row md:items-center md:gap-4">
+            <Link href="/privacy" className="transition-colors hover:text-cream-100">
+              Политика конфиденциальности
+            </Link>
+            <span className="hidden md:inline text-cream-100/25">|</span>
+              Продолжая использование сайта, вы соглашаетесь на обработку персональных данных
+          </div>
+          <span>Разработка сайта — Artifica technology</span>
         </div>
       </div>
     </footer>

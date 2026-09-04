@@ -45,7 +45,7 @@ export default function AdminLeadsPage() {
   return (
     <div>
       <h1 className="text-2xl font-heading font-bold text-dark-green mb-6">
-        Лиды (консультации)
+        Обращения
       </h1>
 
       {/* Filters */}

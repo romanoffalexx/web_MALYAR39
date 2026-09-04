@@ -59,7 +59,7 @@ export default function AdminDashboard() {
           </Link>
         </div>
         <div className="bg-white rounded-xl shadow-md p-6">
-          <div className="text-sm text-gray-600 mb-1">Заявки</div>
+          <div className="text-sm text-gray-600 mb-1">Заказы</div>
           <div className="text-3xl font-bold text-dark-green">{stats.totalOrders}</div>
           {stats.newOrders > 0 && (
             <div className="text-sm text-red-600 font-medium">
@@ -71,7 +71,7 @@ export default function AdminDashboard() {
           </Link>
         </div>
         <div className="bg-white rounded-xl shadow-md p-6">
-          <div className="text-sm text-gray-600 mb-1">Лиды</div>
+          <div className="text-sm text-gray-600 mb-1">Обращения</div>
           <div className="text-3xl font-bold text-dark-green">{stats.totalLeads}</div>
           {stats.newLeads > 0 && (
             <div className="text-sm text-red-600 font-medium">

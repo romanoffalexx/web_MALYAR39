@@ -302,13 +302,15 @@ export default function ConsultationPage() {
                   </p>
                 )}
 
-                <p className="mt-3 flex items-center justify-center gap-1.5 text-[11px] text-moss">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden>
-                    <rect x="5" y="10" width="14" height="10" rx="2" />
-                    <path d="M8 10V7a4 4 0 0 1 8 0v3" strokeLinecap="round" />
-                  </svg>
-                  Мы не передаём ваши данные третьим лицам
-                </p>
+                <label className="mt-3 flex items-start justify-center gap-2 text-[11px] text-moss">
+                  <input type="checkbox" defaultChecked className="mt-0.5 shrink-0 accent-forest-800" />
+                  <span>
+                    Я согласен на{" "}
+                    <Link href="/privacy" target="_blank" className="underline hover:text-ink">
+                      обработку персональных данных
+                    </Link>
+                  </span>
+                </label>
               </form>
             )}
           </div>
