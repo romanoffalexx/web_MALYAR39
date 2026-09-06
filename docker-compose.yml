@@ -1,14 +1,16 @@
-version: "3.8"
-
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: malyar39-app
+    restart: unless-stopped
     expose:
       - "3000"
     environment:
       - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - NODE_ENV=production
       - DATABASE_URL=${DATABASE_URL}
       - S3_ENDPOINT=${S3_ENDPOINT}
       - S3_BUCKET=${S3_BUCKET}
@@ -31,9 +33,9 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - DOMAIN=${DOMAIN}
       - SESSION_SECRET=${SESSION_SECRET}
-    restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 20s
