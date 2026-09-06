@@ -331,7 +331,7 @@ export default async function HomePage() {
             </div>
 
             <img
-              src="/images/people/consultant.jpg"
+              src="/images/people/consultant.png"
               alt="Специалист магазина Маляр"
               className="hidden h-full w-56 object-cover object-top lg:block"
             />
