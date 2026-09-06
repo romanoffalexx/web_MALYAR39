@@ -121,6 +121,9 @@ export default function AdminProductsPage() {
   const [compatibility, setCompatibility] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [documentsJson, setDocumentsJson] = useState("");
+  const [newBrandName, setNewBrandName] = useState("");
+  const [creatingBrand, setCreatingBrand] = useState(false);
+  const [showBrandInput, setShowBrandInput] = useState(false);
 
   const fetchProducts = useCallback(async (searchQuery?: string) => {
     setLoading(true);
@@ -150,6 +153,32 @@ export default function AdminProductsPage() {
       }
     } catch (err) {
       console.error("Failed to fetch references:", err);
+    }
+  };
+
+  const createBrand = async () => {
+    if (!newBrandName.trim()) return;
+    setCreatingBrand(true);
+    try {
+      const res = await fetch("/api/admin/brands", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: newBrandName.trim() }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setBrandId(String(data.brand.id));
+        setNewBrandName("");
+        setShowBrandInput(false);
+        fetchReferences();
+      } else {
+        const data = await res.json();
+        setError(data.error || "Ошибка создания бренда");
+      }
+    } catch {
+      setError("Ошибка сети при создании бренда");
+    } finally {
+      setCreatingBrand(false);
     }
   };
 
@@ -188,6 +217,8 @@ export default function AdminProductsPage() {
     setCompatibility("");
     setVideoUrl("");
     setDocumentsJson("");
+    setNewBrandName("");
+    setShowBrandInput(false);
     setEditingId(null);
     setError("");
   };
@@ -498,8 +529,11 @@ export default function AdminProductsPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Название *
+                  <label
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                    title="Отображаемое название товара на сайте."
+                  >
+                    Название <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -513,8 +547,11 @@ export default function AdminProductsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Slug (ЧПУ) *
+                  <label
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                    title="ЧПУ (Человеко-Понятный URL) — часть адреса страницы товара. Например, для товара «Грунтовка Глубокая» slug будет «gruntovka-glubokaya». Заполняется автоматически из названия, но можно изменить вручную. Только латинские буквы, цифры и дефис."
+                  >
+                    Slug (ЧПУ) <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -528,8 +565,11 @@ export default function AdminProductsPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Категория *
+                  <label
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                    title="Категория каталога, в которой будет отображаться товар."
+                  >
+                    Категория <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={categoryId}
@@ -546,8 +586,11 @@ export default function AdminProductsPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Бренд
+                  <label
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                    title="Бренд товара. Можно выбрать существующий или создать новый прямо здесь."
+                  >
+                    Бренд <span className="text-gray-400 font-normal">(необязательно)</span>
                   </label>
                   <select
                     value={brandId}
@@ -561,13 +604,59 @@ export default function AdminProductsPage() {
                       </option>
                     ))}
                   </select>
+                  {showBrandInput ? (
+                    <div className="flex gap-2 mt-2">
+                      <input
+                        type="text"
+                        value={newBrandName}
+                        onChange={(e) => setNewBrandName(e.target.value)}
+                        placeholder="Название нового бренда"
+                        className="input-field flex-1"
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            createBrand();
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={createBrand}
+                        disabled={creatingBrand || !newBrandName.trim()}
+                        className="btn-primary text-sm px-3 py-1 disabled:opacity-50"
+                      >
+                        {creatingBrand ? "..." : "Создать"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowBrandInput(false);
+                          setNewBrandName("");
+                        }}
+                        className="text-gray-400 hover:text-gray-600 text-sm px-2"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setShowBrandInput(true)}
+                      className="text-sm text-brand-700 hover:underline mt-1"
+                    >
+                      + Создать новый бренд
+                    </button>
+                  )}
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Артикул
+                  <label
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                    title="Артикул — внутренний код товара (артикул производителя или склада). Необязательное поле."
+                  >
+                    Артикул <span className="text-gray-400 font-normal">(необязательно)</span>
                   </label>
                   <input
                     type="text"
@@ -599,8 +688,11 @@ export default function AdminProductsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Краткое описание
+                <label
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                  title="Краткое описание — отображается в карточке товара и списках каталога. Рекомендуемый объём: 1–2 предложения."
+                >
+                  Краткое описание <span className="text-gray-400 font-normal">(необязательно)</span>
                 </label>
                 <textarea
                   value={shortDescription}
@@ -611,8 +703,11 @@ export default function AdminProductsPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Полное описание
+                <label
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                  title="Полное описание — подробная информация о товаре, отображается на странице товара. Можно использовать несколько абзацев."
+                >
+                  Полное описание <span className="text-gray-400 font-normal">(необязательно)</span>
                 </label>
                 <textarea
                   value={description}
@@ -624,8 +719,11 @@ export default function AdminProductsPage() {
 
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Расход (м²/л)
+                  <label
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                    title="Расход материала — сколько литров/кг уходит на 1 м² поверхности. Используется в калькуляторе на сайте для расчёта количества материала."
+                  >
+                    Расход (м²/л) <span className="text-gray-400 font-normal">(необязательно)</span>
                   </label>
                   <input
                     type="number"
@@ -636,8 +734,11 @@ export default function AdminProductsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Слоёв по умолчанию
+                  <label
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                    title="Количество слоёв нанесения по умолчанию. Используется в калькуляторе. Обычно 2 слоя."
+                  >
+                    Слоёв по умолчанию <span className="text-gray-400 font-normal">(необязательно)</span>
                   </label>
                   <input
                     type="number"
@@ -647,8 +748,11 @@ export default function AdminProductsPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Рейтинг
+                  <label
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                    title="Рейтинг товара от 0 до 5. Отображается в каталоге и на странице товара."
+                  >
+                    Рейтинг <span className="text-gray-400 font-normal">(необязательно)</span>
                   </label>
                   <input
                     type="number"
@@ -901,8 +1005,11 @@ export default function AdminProductsPage() {
                 <div className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        SEO Title
+                      <label
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                        title="Заголовок страницы в поисковых системах (Google, Яндекс). Если не заполнен — берётся название товара. Рекомендуемая длина: 50–70 символов."
+                      >
+                        SEO Title <span className="text-gray-400 font-normal">(необязательно)</span>
                       </label>
                       <input
                         type="text"
@@ -913,8 +1020,11 @@ export default function AdminProductsPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Видео (URL)
+                      <label
+                        className="block text-sm font-medium text-gray-700 mb-1"
+                        title="Ссылка на видео-обзор товара (YouTube, RuTube и т.п.). Используйте embed-ссылку, например: https://youtube.com/embed/XXXXX"
+                      >
+                        Видео (URL) <span className="text-gray-400 font-normal">(необязательно)</span>
                       </label>
                       <input
                         type="text"
@@ -926,8 +1036,11 @@ export default function AdminProductsPage() {
                     </div>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      SEO Description
+                    <label
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                      title="Описание страницы для поисковых систем (meta description). Отображается в результатах поиска под заголовком. Рекомендуемая длина: 150–160 символов."
+                    >
+                      SEO Description <span className="text-gray-400 font-normal">(необязательно)</span>
                     </label>
                     <textarea
                       value={seoDescription}
@@ -938,8 +1051,11 @@ export default function AdminProductsPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Инструкция по нанесению
+                    <label
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                      title="Пошаговая инструкция по нанесению материала. Отображается на странице товара в отдельном блоке."
+                    >
+                      Инструкция по нанесению <span className="text-gray-400 font-normal">(необязательно)</span>
                     </label>
                     <textarea
                       value={applicationInstructions}
@@ -950,8 +1066,11 @@ export default function AdminProductsPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Совместимость
+                    <label
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                      title="С какими поверхностями и материалами совместим данный товар. Отображается на странице товара."
+                    >
+                      Совместимость <span className="text-gray-400 font-normal">(необязательно)</span>
                     </label>
                     <textarea
                       value={compatibility}
@@ -962,8 +1081,11 @@ export default function AdminProductsPage() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Документы (JSON)
+                    <label
+                      className="block text-sm font-medium text-gray-700 mb-1"
+                      title="Список документов для скачивания на странице товара (сертификаты, ТУ, инструкции). Формат: JSON-массив объектов. Каждый объект содержит: name (название документа), url (ссылка на файл), size (размер, необязательно). Если не нужен — оставьте пустым."
+                    >
+                      Документы (JSON) <span className="text-gray-400 font-normal">(необязательно)</span>
                     </label>
                     <textarea
                       value={documentsJson}
