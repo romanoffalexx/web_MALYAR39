@@ -56,7 +56,7 @@ export async function verifyPassword(
 export const ADMIN_COOKIE_OPTIONS = {
   name: COOKIE_NAME,
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
+  secure: process.env.NODE_ENV === "production" && !process.env.DOMAIN?.includes("nip.io"),
   sameSite: "lax" as const,
   path: "/",
   maxAge: 60 * 60 * 24,
