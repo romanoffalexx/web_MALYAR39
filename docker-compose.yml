@@ -5,13 +5,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "${APP_PORT:-3002}:3000"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.malyar.rule=Host(`malyar.212.8.226.48.nip.io`)"
-      - "traefik.http.routers.malyar.entrypoints=web"
-      - "traefik.http.services.malyar.loadbalancer.server.port=3000"
+    expose:
+      - "3000"
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - S3_ENDPOINT=${S3_ENDPOINT}

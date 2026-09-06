@@ -3,6 +3,8 @@ node_modules/
 out/
 .env
 .env.local
+.env.bak.*
+.env.backup
 *.tsbuildinfo
 next-env.d.ts
 drizzle/
