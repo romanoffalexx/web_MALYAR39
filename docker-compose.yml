@@ -6,9 +6,9 @@ services:
       context: .
       dockerfile: Dockerfile
     expose:
-      - "3002"
+      - "3000"
     environment:
-      - PORT=3002
+      - PORT=3000
       - DATABASE_URL=${DATABASE_URL}
       - S3_ENDPOINT=${S3_ENDPOINT}
       - S3_BUCKET=${S3_BUCKET}
@@ -31,14 +31,9 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - DOMAIN=${DOMAIN}
       - SESSION_SECRET=${SESSION_SECRET}
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.malyar.rule=Host(`malyar.212.8.226.48.nip.io`)"
-      - "traefik.http.routers.malyar.entrypoints=web"
-      - "traefik.http.services.malyar.loadbalancer.server.port=3002"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3002"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
       interval: 30s
       timeout: 10s
       retries: 3
