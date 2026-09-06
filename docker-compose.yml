@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     expose:
-      - "3000"
+      - "3001"
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - S3_ENDPOINT=${S3_ENDPOINT}
@@ -32,7 +32,7 @@ services:
       - SESSION_SECRET=${SESSION_SECRET}
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001"]
       interval: 30s
       timeout: 10s
       retries: 3
