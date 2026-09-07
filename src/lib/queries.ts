@@ -1095,6 +1095,31 @@ function rowsOf<T>(result: unknown): T[] {
   return maybe?.rows ?? [];
 }
 
+/* ─── Контент-блоки ───────────────────────────────────── */
+
+export interface ContentBlockView {
+  id: number;
+  key: string;
+  title: string | null;
+  text: string | null;
+  image: string | null;
+}
+
+export async function getContentBlock(key: string): Promise<ContentBlockView | null> {
+  const rows = await db
+    .select({
+      id: t.contentBlocks.id,
+      key: t.contentBlocks.key,
+      title: t.contentBlocks.title,
+      text: t.contentBlocks.text,
+      image: t.contentBlocks.image,
+    })
+    .from(t.contentBlocks)
+    .where(and(eq(t.contentBlocks.key, key), eq(t.contentBlocks.published, true)))
+    .limit(1);
+  return rows[0] ?? null;
+}
+
 /* ─── Настройки сайта (контакты) ──────────────────────── */
 
 /**

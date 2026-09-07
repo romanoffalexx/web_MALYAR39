@@ -148,9 +148,48 @@ export default function AdminContentPage() {
         </button>
       </div>
 
-      <div className="mb-6 rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
-        Блоки сохраняются в базу по уникальному ключу. Подключение блоков к
-        публичным страницам — отдельный этап.
+      <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-900">
+        <details>
+          <summary className="cursor-pointer font-semibold">
+            Как работать с контент-блоками?
+          </summary>
+          <div className="mt-3 space-y-3 text-blue-800">
+            <p>
+              <strong>Контент-блок</strong> — это фрагмент текста или баннер,
+              который менеджер может менять без разработчика. Каждый блок
+              привязан к месту на сайте через <strong>ключ</strong>.
+            </p>
+            <div>
+              <p className="mb-1 font-semibold">Доступные места на сайте:</p>
+              <table className="w-full border-collapse text-xs">
+                <thead>
+                  <tr className="border-b border-blue-200">
+                    <th className="py-1 pr-4 text-left font-semibold">Ключ</th>
+                    <th className="py-1 text-left font-semibold">Где отображается</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-b border-blue-100">
+                    <td className="py-1.5 pr-4"><code className="rounded bg-blue-100 px-1.5 py-0.5">home_banner</code></td>
+                    <td className="py-1.5">Баннер на главной странице (между hero-секцией и категориями)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div>
+              <p className="mb-1 font-semibold">Как пользоваться:</p>
+              <ol className="list-inside list-decimal space-y-1">
+                <li>Создайте блок с нужным ключом (например <code className="rounded bg-blue-100 px-1">home_banner</code>)</li>
+                <li>Заполните заголовок и текст — они появятся на сайте</li>
+                <li>Убедитесь, что стоит галочка <strong>«Опубликован»</strong></li>
+                <li>Снимите галочку — блок скроется с сайта (черновик)</li>
+              </ol>
+            </div>
+            <p className="text-xs text-blue-600">
+              Чтобы подключить блок к новому месту на сайте, обратитесь к разработчику — он добавит новый ключ.
+            </p>
+          </div>
+        </details>
       </div>
 
       <input
@@ -276,6 +315,9 @@ export default function AdminContentPage() {
                     placeholder="например: home_banner"
                     required
                   />
+                  <p className="mt-1 text-xs text-gray-400">
+                    Уникальный идентификатор места на сайте. Текущие ключи: home_banner
+                  </p>
                 </div>
                 <div>
                   <label className="mb-1 block text-sm font-medium text-gray-700">

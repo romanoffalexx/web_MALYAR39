@@ -364,6 +364,21 @@ async function seedSolutions(
   }
 }
 
+async function seedContentBlocks(tx: PostgresJsDatabase<typeof schema>) {
+  await tx
+    .insert(schema.contentBlocks)
+    .values([
+      {
+        key: "home_banner",
+        title: "Скидка 15% на первый заказ",
+        text: "Используйте промокод МАЛЯР15 при оформлении заказа. Акция действует на весь ассортимент каталога.",
+        published: true,
+        order: 0,
+      },
+    ])
+    .onConflictDoNothing();
+}
+
 async function wipe(tx: PostgresJsDatabase<typeof schema>) {
   await tx.delete(solutionSteps);
   await tx.delete(solutionMaterials);
@@ -398,6 +413,9 @@ async function main() {
 
   console.log("Решения по сегментам…");
   await db.transaction((tx) => seedSolutions(tx, productIdByName));
+
+  console.log("Контент-блоки…");
+  await db.transaction(seedContentBlocks);
 
   console.log("Готово.");
   await client.end();

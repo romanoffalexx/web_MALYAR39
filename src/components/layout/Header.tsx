@@ -18,42 +18,14 @@ const navItems = [
   { href: "/about", label: "О компании" },
 ];
 
-function LogoMark({ className = "" }: { className?: string }) {
+export function Logo({ className = "h-10 sm:h-12" }: { className?: string }) {
   return (
-    <span className={`inline-flex items-end gap-[3px] ${className}`} aria-hidden>
-      <svg width="14" height="16" viewBox="0 0 14 16">
-        <path d="M7 0 14 16H0Z" fill="#3E7CB1" />
-      </svg>
-      <svg width="14" height="20" viewBox="0 0 14 20">
-        <path d="M7 0 14 20H0Z" fill="#F2B33D" />
-      </svg>
-      <svg width="14" height="16" viewBox="0 0 14 16">
-        <path d="M7 0 14 16H0Z" fill="#D9553F" />
-      </svg>
-    </span>
-  );
-}
-
-export function Logo({ light = true }: { light?: boolean }) {
-  return (
-    <Link href="/" className="flex items-center gap-2.5">
-      <span
-        className={`font-heading text-[26px] font-bold leading-none tracking-wide ${
-          light ? "text-cream-100" : "text-forest-900"
-        }`}
-      >
-        М
-        <LogoMark className="mx-[1px] align-baseline" />
-        ЯР
-      </span>
-      <span
-        className={`hidden sm:block text-[9px] font-medium uppercase leading-tight tracking-[0.3em] ${
-          light ? "text-cream-100/60" : "text-moss"
-        }`}
-      >
-        Краски
-        <br />и штукатурки
-      </span>
+    <Link href="/" className="inline-block">
+      <img
+        src="/images/logo.png"
+        alt="МАЯР — краски и штукатурки"
+        className={className}
+      />
     </Link>
   );
 }

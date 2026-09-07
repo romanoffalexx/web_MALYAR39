@@ -69,7 +69,7 @@ export default function Footer({
     <footer className="bg-forest-900 text-cream-100">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_1fr_1.2fr]">
         <div>
-          <Logo />
+          <Logo className="h-[60px] sm:h-[72px]" />
           <p className="mt-5 max-w-[220px] text-xs leading-relaxed text-cream-100/60">
             Профессиональные материалы для покраски и отделки. Работаем с 2012 года.
           </p>
@@ -172,7 +172,7 @@ export default function Footer({
             <span className="hidden md:inline text-cream-100/25">|</span>
               Продолжая использование сайта, вы соглашаетесь на обработку персональных данных
           </div>
-          <span>Разработка сайта — Artifica technology</span>
+          <span>Разработка сайта — <a href="https://artifica.tech" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-cream-100">Artifica technology</a></span>
         </div>
       </div>
     </footer>

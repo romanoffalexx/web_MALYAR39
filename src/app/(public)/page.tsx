@@ -6,6 +6,7 @@ import {
   getFeaturedVideos,
   getHomeCategories,
   getPopularProducts,
+  getContentBlock,
 } from "@/lib/queries";
 
 export const revalidate = 300;
@@ -75,19 +76,33 @@ function ArrowRight() {
 }
 
 export default async function HomePage() {
-  const [categories, popularProducts, cases, videos] = await Promise.all([
+  const [categories, popularProducts, cases, videos, homeBanner] = await Promise.all([
     getHomeCategories(4),
     getPopularProducts(5),
     getFeaturedCases(3),
     getFeaturedVideos(5),
+    getContentBlock("home_banner"),
   ]);
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative overflow-hidden bg-cream-100">
-        <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-14 lg:grid-cols-[1.05fr_1fr] lg:py-0">
-          <div className="max-w-2xl py-4 lg:py-20">
+      {/* Hero с фоновым изображением */}
+      <section className="relative h-[500px] overflow-hidden bg-cream-100 md:h-[550px] lg:h-[600px]">
+        {/* Фоновое изображение */}
+        <div className="absolute inset-0">
+          <img
+            src="/images/hero/paint-can.jpg"
+            alt=""
+            aria-hidden="true"
+            className="h-full w-full object-cover"
+          />
+          {/* Градиент для читаемости текста */}
+          <div className="absolute inset-0 bg-gradient-to-r from-cream-100/80 via-cream-100/50 to-cream-100/20 md:from-cream-100/60 md:via-cream-100/35 md:to-cream-100/10 lg:from-cream-100/50 lg:via-cream-100/25 lg:to-transparent" />
+        </div>
+
+        {/* Контент поверх фона */}
+        <div className="relative z-10 mx-auto max-w-7xl px-4 py-14 lg:py-20">
+          <div className="max-w-2xl">
             <p className="eyebrow">Профессиональные материалы</p>
             <h1 className="mt-5 font-heading text-4xl font-bold uppercase leading-[1.08] tracking-tight text-forest-900 md:text-5xl xl:text-[56px]">
               Для качественной покраски и отделки
@@ -120,16 +135,40 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-
-          <div className="relative -mx-4 lg:mx-0 lg:self-stretch">
-            <img
-              src="/images/hero/paint-can.jpg"
-              alt="Банка краски Маляр, валик и кисть"
-              className="h-64 w-full object-cover lg:absolute lg:inset-y-0 lg:left-0 lg:h-full lg:w-[115%] lg:max-w-none lg:object-cover lg:object-left"
-            />
-          </div>
         </div>
       </section>
+
+      {/* Динамический баннер из контент-блока home_banner */}
+      {homeBanner && (
+        <section className="bg-forest-800 text-cream-100">
+          <div className="mx-auto max-w-7xl px-4 py-10 lg:py-14">
+            <div className="grid items-center gap-8 lg:grid-cols-[1fr_auto]">
+              <div>
+                {homeBanner.title && (
+                  <h2 className="font-heading text-2xl font-bold uppercase tracking-wide lg:text-3xl">
+                    {homeBanner.title}
+                  </h2>
+                )}
+                {homeBanner.text && (
+                  <p className="mt-3 max-w-xl text-sm leading-relaxed text-cream-100/80 lg:text-base">
+                    {homeBanner.text}
+                  </p>
+                )}
+              </div>
+              {homeBanner.image && (
+                <div className="hidden lg:block">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={homeBanner.image}
+                    alt={homeBanner.title ?? ""}
+                    className="h-32 w-auto object-contain"
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Категории */}
       <section className="bg-cream-50 py-16">
@@ -311,7 +350,7 @@ export default async function HomePage() {
       {/* Баннер консультации */}
       <section className="bg-cream-50 pb-16">
         <div className="mx-auto max-w-7xl px-4">
-          <div className="relative grid overflow-hidden rounded-xl bg-forest-900 text-cream-100 lg:grid-cols-[1.3fr_auto_1fr]">
+          <div className="relative grid overflow-hidden rounded-xl bg-forest-900 text-cream-100 md:grid-cols-2 lg:grid-cols-[1.3fr_auto_1fr]">
             <div className="p-8 lg:p-12">
               <span className="flex h-14 w-14 items-center justify-center rounded-full border border-cream-100/40">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden>
@@ -330,22 +369,24 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <img
-              src="/images/people/consultant.png"
-              alt="Специалист магазина Маляр"
-              className="hidden h-full w-56 object-cover object-top lg:block"
-            />
+            <div className="hidden md:flex lg:contents flex-col items-center">
+              <img
+                src="/images/people/consultant.png"
+                alt="Специалист магазина Маляр"
+                className="h-full w-64 object-contain lg:w-72"
+              />
 
-            <ul className="space-y-5 p-8 lg:p-12">
-              {consultPoints.map((p) => (
-                <li key={p.text} className="flex items-center gap-3.5">
-                  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" className="shrink-0 text-cream-100/70" aria-hidden>
-                    {p.icon}
-                  </svg>
-                  <span className="text-sm font-medium">{p.text}</span>
-                </li>
-              ))}
-            </ul>
+              <ul className="space-y-5 p-8 lg:p-12">
+                {consultPoints.map((p) => (
+                  <li key={p.text} className="flex items-center gap-3.5">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" className="shrink-0 text-cream-100/70" aria-hidden>
+                      {p.icon}
+                    </svg>
+                    <span className="text-sm font-medium">{p.text}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
       </section>
